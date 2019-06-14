@@ -22,7 +22,6 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\Topic;
-use App\Models\Client;
 use App\Models\Follow;
 use App\Models\Invite;
 use App\Models\History;
@@ -121,10 +120,10 @@ class UserController extends Controller
     /**
      * User Followers.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @param $slug
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function followers(Request $request, $slug, int $id)
@@ -184,6 +183,7 @@ class UserController extends Controller
     /**
      * Edit Profile Form.
      *
+     * @param Request $request
      * @param $username
      * @param $id
      *
@@ -255,6 +255,7 @@ class UserController extends Controller
     /**
      * User Account Settings.
      *
+     * @param Request $request
      * @param $slug
      * @param $id
      *
@@ -314,6 +315,7 @@ class UserController extends Controller
     /**
      * User Security Settings.
      *
+     * @param Request $request
      * @param $slug
      * @param $id
      *
@@ -1134,6 +1136,7 @@ class UserController extends Controller
     /**
      * User Privacy Settings.
      *
+     * @param Request $request
      * @param $slug
      * @param $id
      *
@@ -1150,6 +1153,7 @@ class UserController extends Controller
     /**
      * User Notification Settings.
      *
+     * @param Request $request
      * @param $slug
      * @param $id
      *
@@ -1164,104 +1168,9 @@ class UserController extends Controller
     }
 
     /**
-     * Get A Users Seedboxes/Clients.
-     *
-     * @param $username
-     * @param $id
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function clients(Request $request, $username, $id)
-    {
-        $user = User::where('id', '=', $id)->firstOrFail();
-
-        abort_unless(($request->user()->group->is_modo || $request->user()->id == $user->id), 403);
-
-        $cli = Client::where('user_id', '=', $user->id)->get();
-
-        return view('user.clients', ['user' => $user, 'clients' => $cli, 'route' => 'client']);
-    }
-
-    /**
-     * Add A Seedbox/Client.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param $username
-     * @param $id
-     *
-     * @return Illuminate\Http\RedirectResponse
-     */
-    protected function authorizeClient(Request $request, $username, $id)
-    {
-        $v = validator($request->all(), [
-            'password'    => 'required',
-            'ip'          => 'required|ipv4|unique:clients,ip',
-            'client_name' => 'required|alpha_num',
-        ]);
-
-        $user = auth()->user();
-        if ($v->passes()) {
-            if (Hash::check($request->input('password'), $user->password)) {
-                if (Client::where('user_id', '=', $user->id)->get()->count() >= config('other.max_cli')) {
-                    return redirect()->route('user_clients', ['username' => $user->username, 'id' => $user->id])
-                        ->withErrors('Max Clients Reached!');
-                }
-                $cli = new Client();
-                $cli->user_id = $user->id;
-                $cli->name = $request->input('client_name');
-                $cli->ip = $request->input('ip');
-                $cli->save();
-
-                // Activity Log
-                \LogActivity::addToLog("Member {$user->username} has added a new seedbox to there account.");
-
-                return redirect()->route('user_clients', ['username' => $user->username, 'id' => $user->id])
-                    ->withSuccess('Client Has Been Added!');
-            } else {
-                return redirect()->route('user_clients', ['username' => $user->username, 'id' => $user->id])
-                    ->withErrors('Password Invalid!');
-            }
-        } else {
-            return redirect()->route('user_clients', ['username' => $user->username, 'id' => $user->id])
-                ->withErrors('All required values not received or IP is already registered by a member.');
-        }
-    }
-
-    /**
-     * Delete A Seedbox/Client.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param $username
-     * @param $id
-     *
-     * @return Illuminate\Http\RedirectResponse
-     */
-    protected function removeClient(Request $request, $username, $id)
-    {
-        $v = validator($request->all(), [
-            'cliid'  => 'required|exists:clients,id',
-            'userid' => 'required|exists:users,id',
-        ]);
-
-        $user = auth()->user();
-        if ($v->passes()) {
-            $cli = Client::where('id', '=', $request->input('cliid'));
-            $cli->delete();
-
-            // Activity Log
-            \LogActivity::addToLog("Member {$user->username} has removed a seedbox from there account.");
-
-            return redirect()->route('user_clients', ['username' => $user->username, 'id' => $user->id])
-                ->withSuccess('Client Has Been Removed!');
-        } else {
-            return redirect()->route('user_clients', ['username' => $user->username, 'id' => $user->id])
-                ->withErrors('Unable to remove this client.');
-        }
-    }
-
-    /**
      * Get A Users Warnings.
      *
+     * @param Request $request
      * @param $username
      * @param $id
      *
@@ -1290,6 +1199,7 @@ class UserController extends Controller
     /**
      * Deactivate A Warning.
      *
+     * @param Request $request
      * @param $id
      *
      * @return Illuminate\Http\RedirectResponse
@@ -1321,6 +1231,7 @@ class UserController extends Controller
     /**
      * Deactivate All Warnings.
      *
+     * @param Request $request
      * @param $username
      * @param $id
      *
@@ -1358,6 +1269,7 @@ class UserController extends Controller
     /**
      * Delete A Warning.
      *
+     * @param Request $request
      * @param $id
      *
      * @return Illuminate\Http\RedirectResponse
@@ -1391,6 +1303,7 @@ class UserController extends Controller
     /**
      * Delete All Warnings.
      *
+     * @param Request $request
      * @param $username
      * @param $id
      *
@@ -1429,6 +1342,7 @@ class UserController extends Controller
     /**
      * Restore A Soft Deleted Warning.
      *
+     * @param Request $request
      * @param $id
      *
      * @return Illuminate\Http\RedirectResponse
@@ -1456,6 +1370,7 @@ class UserController extends Controller
      * @param $id
      *
      * @return array
+     * @throws \Throwable
      */
     public function myFilter(Request $request, $username, $id)
     {
@@ -1972,6 +1887,7 @@ class UserController extends Controller
     /**
      * Get A Users Wishlist.
      *
+     * @param Request $request
      * @param $slug
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -1996,6 +1912,7 @@ class UserController extends Controller
     /**
      * Get A Users Torrent Bookmarks.
      *
+     * @param Request $request
      * @param $slug
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -2020,6 +1937,7 @@ class UserController extends Controller
     /**
      * Get A Users Downloads (Fully Downloaded) Table.
      *
+     * @param Request $request
      * @param $slug
      * @param $id
      *
@@ -2091,6 +2009,7 @@ class UserController extends Controller
     /**
      * Get A Users Requested Table.
      *
+     * @param Request $request
      * @param $slug
      * @param $id
      *
@@ -2125,6 +2044,7 @@ class UserController extends Controller
     /**
      * Get A Users Unsatisfieds Table.
      *
+     * @param Request $request
      * @param $username
      * @param $id
      *
@@ -2173,6 +2093,7 @@ class UserController extends Controller
     /**
      * Get A Users History Table.
      *
+     * @param Request $request
      * @param $username
      * @param $id
      *
@@ -2206,6 +2127,7 @@ class UserController extends Controller
     /**
      * Get A Users Graveyard Resurrections.
      *
+     * @param Request $request
      * @param $slug
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -2227,6 +2149,7 @@ class UserController extends Controller
     /**
      * Get A User Uploads.
      *
+     * @param Request $request
      * @param $slug
      * @param $id
      *
@@ -2269,6 +2192,7 @@ class UserController extends Controller
     /**
      * Get A Users Active Table.
      *
+     * @param Request $request
      * @param $username
      * @param $id
      *
@@ -2305,6 +2229,7 @@ class UserController extends Controller
     /**
      * Get A Users Seeds Table.
      *
+     * @param Request $request
      * @param $username
      * @param $id
      *
@@ -2340,6 +2265,7 @@ class UserController extends Controller
     /**
      * Get A Users Bans.
      *
+     * @param Request $request
      * @param $username
      * @param $id
      *
@@ -2361,6 +2287,7 @@ class UserController extends Controller
     /**
      * Download All History Torrents.
      *
+     * @param Request $request
      * @param $username
      * @param $id
      *
@@ -2445,6 +2372,7 @@ class UserController extends Controller
     /**
      * Accept Site Rules.
      *
+     * @param Request $request
      * @return void
      */
     public function acceptRules(Request $request)

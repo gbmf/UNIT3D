@@ -47,7 +47,7 @@
                         {{ $movie->title }} ({{ $movie->releaseYear }})
                         <span class="badge-user text-bold text-gold">@lang('torrent.rating'):
           <span class="movie-rating-stars">
-            <i class="{{ config('other.font-awesome') }} fa-star"></i>
+            <i class="{{ config('other.font-awesome') }} fa-thumbs-up"></i>
           </span>
                         @if ($user->ratings == 1)
                                 {{ $movie->imdbRating }}/10 ({{ $movie->imdbVotes }} @lang('torrent.votes'))
@@ -60,13 +60,13 @@
                         <p class="movie-plot">{{ $movie->plot }}</p>
                         <strong>ID:</strong>
                         <span class="badge-user"><a
-                                    href="https://www.imdb.com/title/{{ $movie->imdb }}">{{ $movie->imdb }}</a></span>
+                                    href="https://www.imdb.com/title/{{ $movie->imdb }}" target="_blank">{{ $movie->imdb }}</a></span>
                         @if ($torrents->first()->category_id == "2" && $torrents->first()->tmdb != 0 && $torrents->first()->tmdb != null)
                             <span class="badge-user"><a
-                                        href="https://www.themoviedb.org/tv/{{ $movie->tmdb }}">{{ $movie->tmdb }}</a></span>
+                                        href="https://www.themoviedb.org/tv/{{ $movie->tmdb }}?language={{ config('app.locale') }}" target="_blank">{{ $movie->tmdb }}</a></span>
                         @elseif ($torrents->first()->tmdb != 0 && $torrents->first()->tmdb != null)
                             <span class="badge-user"><a
-                                        href="https://www.themoviedb.org/movie/{{ $movie->tmdb }}">{{ $movie->tmdb }}</a></span>
+                                        href="https://www.themoviedb.org/movie/{{ $movie->tmdb }}?language={{ config('app.locale') }}" target="_blank">{{ $movie->tmdb }}</a></span>
                         @endif
                         <strong>@lang('torrent.genre'): </strong>
                         @if ($movie->genres)
@@ -163,7 +163,7 @@
                                         @if ($history->seeder == 0 && $history->active == 0 && $history->completed_at == null)
                                             <button class="btn btn-info btn-circle" type="button" data-toggle="tooltip"
                                                     data-original-title="@lang('torrent.not-completed')!">
-                                                <i class="{{ config('other.font-awesome') }} fa-hand-paper"></i>
+                                                <i class="{{ config('other.font-awesome') }} fa-spinner"></i>
                                             </button>
                                         @endif
 
@@ -196,10 +196,10 @@
 
                                     @if ($torrent->category->meta == 1)
                                         @if ($user->ratings == 1)
-                                            <a href="https://www.imdb.com/title/tt{{ $torrent->imdb }}">
+                                            <a href="https://www.imdb.com/title/tt{{ $torrent->imdb }}" target="_blank">
                                 <span class="badge-extra text-bold">
                                     <span class="text-gold movie-rating-stars">
-                                        <i class="{{ config('other.font-awesome') }} fa-star" data-toggle="tooltip"
+                                        <i class="{{ config('other.font-awesome') }} fa-thumbs-up" data-toggle="tooltip"
                                            data-original-title="@lang('torrent.view-more')"></i>
                                     </span>
                                     {{ $movie->imdbRating }}/10 ({{ $movie->imdbVotes }} @lang('torrent.votes'))
@@ -207,13 +207,13 @@
                                             </a>
                                         @else
                                             @if ($torrent->category_id == 2)
-                                                <a href="https://www.themoviedb.org/tv/{{ $movie->tmdb }}">
+                                                <a href="https://www.themoviedb.org/tv/{{ $movie->tmdb }}?language={{ config('app.locale') }}" target="_blank">
                                                     @else
-                                                        <a href="https://www.themoviedb.org/movie/{{ $movie->tmdb }}">
+                                                        <a href="https://www.themoviedb.org/movie/{{ $movie->tmdb }}?language={{ config('app.locale') }}" target="_blank">
                                                             @endif
                                                             <span class="badge-extra text-bold">
                                 <span class="text-gold movie-rating-stars">
-                                    <i class="{{ config('other.font-awesome') }} fa-star" data-toggle="tooltip"
+                                    <i class="{{ config('other.font-awesome') }} fa-thumbs-up" data-toggle="tooltip"
                                        data-original-title="@lang('torrent.view-more')"></i>
                                 </span>
                                                                 {{ $movie->tmdbRating }}/10 ({{ $movie->tmdbVotes }} @lang('torrent.votes'))
@@ -271,7 +271,7 @@
                                                     @php $freeleech_token = \App\Models\FreeleechToken::where('user_id', '=', $user->id)->where('torrent_id', '=', $torrent->id)->first(); @endphp
                                                     @if ($freeleech_token)
                                                         <span class='badge-extra text-bold'>
-                                <i class='{{ config("other.font-awesome") }} fa-coins text-bold' data-toggle='tooltip' title=''
+                                <i class='{{ config("other.font-awesome") }} fa-star text-bold' data-toggle='tooltip' title=''
                                    data-original-title='@lang('torrent.freeleech-token')'></i> @lang('torrent.freeleech-token')
                             </span>
                                                     @endif

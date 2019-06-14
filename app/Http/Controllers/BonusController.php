@@ -54,12 +54,12 @@ class BonusController extends Controller
     {
         $user = $request->user();
         $userbon = $user->getSeedbonus();
-        $gifttransactions = BonTransactions::with(['senderObj', 'receiverObj'])->where(function ($query) {
-            $query->where('sender', '=', $request->user()->id)->orwhere('receiver', '=', $request->user()->id);
+        $gifttransactions = BonTransactions::with(['senderObj', 'receiverObj'])->where(function ($query) use ($user) {
+            $query->where('sender', '=', $user->id)->orwhere('receiver', '=', $user->id);
         })->where('name', '=', 'gift')->orderBy('date_actioned', 'DESC')->paginate(25);
 
-        $gifts_sent = BonTransactions::where('sender', '=', $request->user()->id)->where('name', '=', 'gift')->sum('cost');
-        $gifts_received = BonTransactions::where('receiver', '=', $request->user()->id)->where('name', '=', 'gift')->sum('cost');
+        $gifts_sent = BonTransactions::where('sender', '=', $user->id)->where('name', '=', 'gift')->sum('cost');
+        $gifts_received = BonTransactions::where('receiver', '=', $user->id)->where('name', '=', 'gift')->sum('cost');
 
         return view('bonus.gifts', [
             'user'              => $user,
@@ -79,12 +79,12 @@ class BonusController extends Controller
     {
         $user = $request->user();
         $userbon = $user->getSeedbonus();
-        $bontransactions = BonTransactions::with(['senderObj', 'receiverObj'])->where(function ($query) {
-            $query->where('sender', '=', $request->user()->id)->orwhere('receiver', '=', $request->user()->id);
+        $bontransactions = BonTransactions::with(['senderObj', 'receiverObj'])->where(function ($query) use ($user) {
+            $query->where('sender', '=', $user->id)->orwhere('receiver', '=', $user->id);
         })->where('name', '=', 'tip')->orderBy('date_actioned', 'DESC')->paginate(25);
 
-        $tips_sent = BonTransactions::where('sender', '=', $request->user()->id)->where('name', '=', 'tip')->sum('cost');
-        $tips_received = BonTransactions::where('receiver', '=', $request->user()->id)->where('name', '=', 'tip')->sum('cost');
+        $tips_sent = BonTransactions::where('sender', '=', $user->id)->where('name', '=', 'tip')->sum('cost');
+        $tips_received = BonTransactions::where('receiver', '=', $user->id)->where('name', '=', 'tip')->sum('cost');
 
         return view('bonus.tips', [
             'user'              => $user,
@@ -107,7 +107,7 @@ class BonusController extends Controller
         $userbon = $user->getSeedbonus();
         $activefl = PersonalFreeleech::where('user_id', '=', $user->id)->first();
         $BonExchange = new BonExchange();
-        $bontransactions = BonTransactions::with('exchange')->where('sender', '=', $request->user()->id)->where('itemID', '>', 0)->orderBy('date_actioned', 'DESC')->limit(25)->get();
+        $bontransactions = BonTransactions::with('exchange')->where('sender', '=', $user->id)->where('itemID', '>', 0)->orderBy('date_actioned', 'DESC')->limit(25)->get();
         $uploadOptions = $BonExchange->getUploadOptions();
         $downloadOptions = $BonExchange->getDownloadOptions();
         $personalFreeleech = $BonExchange->getPersonalFreeleechOption();
@@ -133,11 +133,9 @@ class BonusController extends Controller
     public function gift(Request $request)
     {
         $user = $request->user();
-        $users = User::oldest('username')->get();
         $userbon = $user->getSeedbonus();
 
         return view('bonus.gift', [
-            'users'             => $users,
             'userbon'           => $userbon,
         ]);
     }
@@ -151,32 +149,31 @@ class BonusController extends Controller
     public function bonus(Request $request, $username = '')
     {
         $user = $request->user();
-        $users = User::oldest('username')->get();
         $userbon = $user->getSeedbonus();
 
         //Dying Torrent
-        $dying = $this->getDyingCount();
+        $dying = $this->getDyingCount($request);
         //Legendary Torrents
-        $legendary = $this->getLegendaryCount();
+        $legendary = $this->getLegendaryCount($request);
         //Old Torrents
-        $old = $this->getOldCount();
+        $old = $this->getOldCount($request);
         //Large Torrents
-        $huge = $this->getHugeCount();
+        $huge = $this->getHugeCount($request);
         //Large Torrents
-        $large = $this->getLargeCount();
+        $large = $this->getLargeCount($request);
         //Everyday Torrents
-        $regular = $this->getRegularCount();
+        $regular = $this->getRegularCount($request);
 
         //Participant Seeder
-        $participant = $this->getParticipaintSeedCount();
+        $participant = $this->getParticipaintSeedCount($request);
         //TeamPlayer Seeder
-        $teamplayer = $this->getTeamPlayerSeedCount();
+        $teamplayer = $this->getTeamPlayerSeedCount($request);
         //Committed Seeder
-        $committed = $this->getCommitedSeedCount();
+        $committed = $this->getCommitedSeedCount($request);
         //MVP Seeder
-        $mvp = $this->getMVPSeedCount();
+        $mvp = $this->getMVPSeedCount($request);
         //Legend Seeder
-        $legend = $this->getLegendarySeedCount();
+        $legend = $this->getLegendarySeedCount($request);
 
         //Total points per hour
         $total =
@@ -191,7 +188,6 @@ class BonusController extends Controller
         $second = $minute / 60;
 
         return view('bonus.index', [
-            'users'             => $users,
             'userbon'           => $userbon,
             'dying'             => $dying,
             'legendary'         => $legendary,
@@ -335,7 +331,7 @@ class BonusController extends Controller
         }
 
         if ($v->passes()) {
-            $recipient = User::where('username', 'LIKE', $request->input('to_username'))->first();
+            $recipient = User::where('username', '=', $request->input('to_username'))->first();
 
             if (! $recipient || $recipient->id == $user->id) {
                 return redirect()->to('/bonus/store')

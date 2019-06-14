@@ -11,24 +11,20 @@
  * @author     HDVinnie
  */
 
-namespace App\Http\Middleware;
+namespace App\Listeners;
 
-use Closure;
-
-class CheckForPrivate
+class LogoutListener
 {
     /**
-     * Handle an incoming request.
+     * Handle the event.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
-     *
-     * @return mixed
+     * @param  auth.logout  $event
+     * @return void
      */
-    public function handle($request, Closure $next)
+    public function handle($event)
     {
-        abort_unless($request->user() && config('other.private') == true, 403);
-
-        return $next($request);
+        if ($event->user !== null) {
+            $event->user->pullCache();
+        }
     }
 }

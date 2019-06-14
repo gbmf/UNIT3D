@@ -1,6 +1,13 @@
 <?php
 
 return [
+    'abbrev-days'          => 'D ',
+    'abbrev-hours'         => 'h ',
+    'abbrev-minutes'       => 'm ',
+    'abbrev-months'        => 'M ',
+    'abbrev-seconds'       => 's',
+    'abbrev-weeks'         => 'W ',
+    'abbrev-years'         => 'Y ',
     'about'                => 'About Us',
     'account'              => 'Account',
     'achievement-title'    => 'Awesome',
@@ -74,6 +81,7 @@ return [
     'internal'             => 'Internal',
     'ip'                   => 'IP',
     'is-allowed'           => 'is allowed',
+    'languages'            => 'Languages',
     'large'                => 'Large',
     'latest'               => 'Latest',
     'latest-posts'         => 'Latest Posts',
@@ -108,6 +116,7 @@ return [
     'openreg_activated'    => 'Open registration activated',
     'order-by'             => 'Order by',
     'other'                => 'Other',
+    'overview'             => 'Overview',
     'pages'                => 'Pages',
     'password'             => 'Password',
     'patron'               => 'Become a Patron',

@@ -69,6 +69,7 @@ class TorrentController extends Controller
     /**
      * Displays Torrent List View.
      *
+     * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function torrents(Request $request)
@@ -92,6 +93,7 @@ class TorrentController extends Controller
     /**
      * Torrent Similar Results.
      *
+     * @param Request $request
      * @param $category_id
      * @param $tmdb
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -122,6 +124,7 @@ class TorrentController extends Controller
     /**
      * Displays Torrent Cards View.
      *
+     * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \ErrorException
      * @throws \HttpInvalidParamException
@@ -185,9 +188,11 @@ class TorrentController extends Controller
     /**
      * Torrent Grouping.
      *
+     * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \ErrorException
      * @throws \HttpInvalidParamException
+     * @throws \Throwable
      */
     public function groupingLayout(Request $request)
     {
@@ -310,12 +315,13 @@ class TorrentController extends Controller
     /**
      * Uses Input's To Put Together A Search.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @param $torrent Torrent
      *
      * @return array
      * @throws \ErrorException
      * @throws \HttpInvalidParamException
+     * @throws \Throwable
      */
     public function faceted(Request $request, Torrent $torrent)
     {
@@ -836,6 +842,7 @@ class TorrentController extends Controller
     /**
      * Display The Torrent.
      *
+     * @param Request $request
      * @param $slug
      * @param $id
      *
@@ -1356,6 +1363,7 @@ class TorrentController extends Controller
     /**
      * Download Check.
      *
+     * @param Request $request
      * @param $slug
      * @param $id
      *
@@ -1372,6 +1380,7 @@ class TorrentController extends Controller
     /**
      * Download A Torrent.
      *
+     * @param Request $request
      * @param $slug
      * @param $id
      * @param $rsskey
@@ -1545,6 +1554,7 @@ class TorrentController extends Controller
     /**
      * 100% Freeleech A Torrent.
      *
+     * @param Request $request
      * @param $slug
      * @param $id
      *
@@ -1575,7 +1585,7 @@ class TorrentController extends Controller
         $torrent->save();
 
         // Activity Log
-        \LogActivity::addToLog('Staff Member '.$user->username." has granted freeleech on torrent, ID: {$torrent->id} NAME: {$torrent->name} .");
+        \LogActivity::addToLog('Staff Member '.$user->username." has revoked freeleech on torrent, ID: {$torrent->id} NAME: {$torrent->name} .");
 
         return redirect()->route('torrent', ['slug' => $torrent->slug, 'id' => $torrent->id])
             ->withSuccess('Torrent FL Has Been Adjusted!');
@@ -1703,6 +1713,7 @@ class TorrentController extends Controller
     /**
      * Use Freeleech Token On A Torrent.
      *
+     * @param Request $request
      * @param $slug
      * @param $id
      *

@@ -162,7 +162,7 @@
                                     @php $freeleech_token = \App\Models\FreeleechToken::where('user_id', '=', $user->id)->where('torrent_id', '=', $new->id)->first(); @endphp
                                     @if ($freeleech_token)
                                         <span class='badge-extra text-bold'>
-                                            <i class='{{ config("other.font-awesome") }} fa-coins text-bold' data-toggle='tooltip' title=''
+                                            <i class='{{ config("other.font-awesome") }} fa-star text-bold' data-toggle='tooltip' title=''
                                                 data-original-title='Freeleech Token'></i> Freeleech Token
                                         </span>
                                     @endif
@@ -211,7 +211,7 @@
 
                                     @if ($user->updated_at->getTimestamp() < $new->created_at->getTimestamp())
                                         <span class='badge-extra text-bold'>
-                                            <i class='{{ config("other.font-awesome") }} fa-magic text-black' data-toggle='tooltip' title=''
+                                            <i class='{{ config("other.font-awesome") }} fa-magic text-green' data-toggle='tooltip' title=''
                                                 data-original-title='@lang('common.new')'></i> @lang('common.new')
                                         </span>
                                     @endif
@@ -375,7 +375,7 @@
                                     @php $freeleech_token = \App\Models\FreeleechToken::where('user_id', '=', $user->id)->where('torrent_id', '=', $seed->id)->first(); @endphp
                                     @if ($freeleech_token)
                                         <span class='badge-extra text-bold'>
-                                            <i class='{{ config("other.font-awesome") }} fa-coins text-bold' data-toggle='tooltip' title=''
+                                            <i class='{{ config("other.font-awesome") }} fa-star text-bold' data-toggle='tooltip' title=''
                                                 data-original-title='Freeleech Token'></i> Freeleech Token
                                         </span>
                                     @endif
@@ -424,7 +424,7 @@
 
                                     @if ($user->updated_at->getTimestamp() < $seed->created_at->getTimestamp())
                                         <span class='badge-extra text-bold'>
-                                            <i class='{{ config("other.font-awesome") }} fa-magic text-black' data-toggle='tooltip' title=''
+                                            <i class='{{ config("other.font-awesome") }} fa-magic text-green' data-toggle='tooltip' title=''
                                                 data-original-title='@lang('common.new')'></i> @lang('common.new')
                                         </span>
                                     @endif
@@ -589,7 +589,7 @@
                                     @php $freeleech_token = \App\Models\FreeleechToken::where('user_id', '=', $user->id)->where('torrent_id', '=', $leech->id)->first(); @endphp
                                     @if ($freeleech_token)
                                         <span class='badge-extra text-bold'>
-                                            <i class='{{ config("other.font-awesome") }} fa-coins text-bold' data-toggle='tooltip' title=''
+                                            <i class='{{ config("other.font-awesome") }} fa-star text-bold' data-toggle='tooltip' title=''
                                                 data-original-title='Freeleech Token'></i> Freeleech Token
                                         </span>
                                     @endif
@@ -638,7 +638,7 @@
 
                                     @if ($user->updated_at->getTimestamp() < $leech->created_at->getTimestamp())
                                         <span class='badge-extra text-bold'>
-                                            <i class='{{ config("other.font-awesome") }} fa-magic text-black' data-toggle='tooltip' title=''
+                                            <i class='{{ config("other.font-awesome") }} fa-magic text-green' data-toggle='tooltip' title=''
                                                 data-original-title='@lang('common.new')'></i> @lang('common.new')
                                         </span>
                                     @endif
@@ -803,7 +803,7 @@
                                     @php $freeleech_token = \App\Models\FreeleechToken::where('user_id', '=', $user->id)->where('torrent_id', '=', $d->id)->first(); @endphp
                                     @if ($freeleech_token)
                                         <span class='badge-extra text-bold'>
-                                            <i class='{{ config("other.font-awesome") }} fa-coins text-bold' data-toggle='tooltip' title=''
+                                            <i class='{{ config("other.font-awesome") }} fa-star text-bold' data-toggle='tooltip' title=''
                                                 data-original-title='Freeleech Token'></i> Freeleech Token
                                         </span>
                                     @endif
@@ -852,7 +852,7 @@
 
                                     @if ($user->updated_at->getTimestamp() < $d->created_at->getTimestamp())
                                         <span class='badge-extra text-bold'>
-                                            <i class='{{ config("other.font-awesome") }} fa-magic text-black' data-toggle='tooltip' title=''
+                                            <i class='{{ config("other.font-awesome") }} fa-magic text-green' data-toggle='tooltip' title=''
                                                 data-original-title='@lang('common.new')'></i> @lang('common.new')
                                         </span>
                                     @endif
@@ -1016,7 +1016,7 @@
                                     @php $freeleech_token = \App\Models\FreeleechToken::where('user_id', '=', $user->id)->where('torrent_id', '=', $d->id)->first(); @endphp
                                     @if ($freeleech_token)
                                         <span class='badge-extra text-bold'>
-                                            <i class='{{ config("other.font-awesome") }} fa-coins text-bold' data-toggle='tooltip' title=''
+                                            <i class='{{ config("other.font-awesome") }} fa-star text-bold' data-toggle='tooltip' title=''
                                                 data-original-title='Freeleech Token'></i> Freeleech Token
                                         </span>
                                     @endif
@@ -1065,7 +1065,7 @@
 
                                     @if ($user->updated_at->getTimestamp() < $d->created_at->getTimestamp())
                                         <span class='badge-extra text-bold'>
-                                            <i class='{{ config("other.font-awesome") }} fa-magic text-black' data-toggle='tooltip' title=''
+                                            <i class='{{ config("other.font-awesome") }} fa-magic text-green' data-toggle='tooltip' title=''
                                                 data-original-title='@lang('common.new')'></i> @lang('common.new')
                                         </span>
                                     @endif
